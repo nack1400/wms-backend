@@ -39,7 +39,7 @@ SYSTEM_APPS = [
     "django.contrib.staticfiles",
 ]
 
-CUSTOM_APPS = []
+CUSTOM_APPS = ["users.apps.UsersConfig"]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -82,13 +82,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'wmsdb',
-        'USER': 'admin',
-        'PASSWORD': 'kwon1739',
-        'HOST': 'localhost',
-        'PORT': '', 
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "wmsdb",
+        "USER": "admin",
+        "PASSWORD": "kwon1739",
+        "HOST": "localhost",
+        "PORT": "",
     }
 }
 
@@ -115,7 +115,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+# LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ko-KR"
 
 TIME_ZONE = "UTC"
 
@@ -133,3 +134,8 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Auth
+
+AUTH_USER_MODEL = "users.User"
