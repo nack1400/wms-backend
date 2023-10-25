@@ -43,6 +43,7 @@ CUSTOM_APPS = ["users.apps.UsersConfig"]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "drf_yasg",
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
@@ -139,3 +140,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Auth
 
 AUTH_USER_MODEL = "users.User"
+
+
+# Swagger
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg.inspectors.SwaggerAutoSchema',
+}
