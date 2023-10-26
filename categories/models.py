@@ -10,7 +10,7 @@ class Category(CommonModel):
         "self", related_name="children", null=True, blank=True, on_delete=models.CASCADE
     )
     key = models.CharField(max_length=100, unique=True)
-    sequence_number = models.IntegerField(default=0)
+    sequence_number = models.IntegerField(default=1)
     billing_unit = models.CharField(max_length=50)
     level = models.PositiveIntegerField(default=0, editable=False)
 
