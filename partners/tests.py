@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Customer, Consignee, Carrier, CarrierAddress
+from .models import Customer, Consignee, Carrier, CarrierAddress, Bank, Contact
 
 
 class CustomerTests(APITestCase):
@@ -220,3 +220,138 @@ class CarrierAddressTests(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(CarrierAddress.objects.count(), 0)
+
+
+class BankTests(APITestCase):
+    def setUp(self):
+        self.bank_data = {
+            "name": "Test Bank",
+            "account_number": "1234567890",
+            "account_type": "Savings",
+            "memo": "Test Memo",
+        }
+        self.bank = Bank.objects.create(**self.bank_data)
+        self.bank_url = reverse("bank-list")
+
+    def test_create_bank(self):
+        response = self.client.post(self.bank_url, self.bank_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Bank.objects.count(), 2)
+
+    def test_create_bank_with_customer(self):
+        customer_data = {
+            "name": "Test Customer",
+            "is_active": True,
+            "memo": "Customer Memo",
+        }
+        customer = Customer.objects.create(**customer_data)
+        bank_data = {
+            "name": "Test Bank",
+            "account_number": "1234567890",
+            "account_type": "Savings",
+            "memo": "Test Memo",
+            "customer": customer.pk,
+        }
+        response = self.client.post(self.bank_url, bank_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Bank.objects.count(), 2)
+        self.assertEqual(response.data["customer"], customer.pk)
+
+    def test_list_banks(self):
+        response = self.client.get(self.bank_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_retrieve_bank(self):
+        url = reverse("bank-detail", args=[self.bank.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Test Bank")
+
+    def test_update_bank(self):
+        updated_data = {
+            "name": "Updated Bank",
+            "account_number": "9876543210",
+            "account_type": "Checking",
+            "memo": "Updated Memo",
+        }
+        url = reverse("bank-detail", args=[self.bank.pk])
+        response = self.client.put(url, updated_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Updated Bank")
+        self.assertEqual(response.data["account_number"], "9876543210")
+
+    def test_delete_bank(self):
+        url = reverse("bank-detail", args=[self.bank.pk])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Bank.objects.count(), 0)
+
+
+class ContactTests(APITestCase):
+    def setUp(self):
+        self.contact_data = {
+            "name": "Test Contact",
+            "email": "test@example.com",
+            "phone": "123-456-7890",
+            "address": "Test Address",
+            "memo": "Test Memo",
+        }
+        self.contact = Contact.objects.create(**self.contact_data)
+        self.contact_url = reverse("contact-list")
+
+    def test_create_contact(self):
+        response = self.client.post(self.contact_url, self.contact_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Contact.objects.count(), 2)
+
+    def test_create_contact_with_customer(self):
+        customer_data = {
+            "name": "Test Customer",
+            "is_active": True,
+            "memo": "Customer Memo",
+        }
+        customer = Customer.objects.create(**customer_data)
+        contact_data = {
+            "name": "Test Contact",
+            "email": "test@example.com",
+            "phone": "123-456-7890",
+            "address": "Test Address",
+            "memo": "Test Memo",
+            "customer": customer.pk,
+        }
+        response = self.client.post(self.contact_url, contact_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Contact.objects.count(), 2)
+        self.assertEqual(response.data["customer"], customer.pk)
+
+    def test_list_contacts(self):
+        response = self.client.get(self.contact_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_retrieve_contact(self):
+        url = reverse("contact-detail", args=[self.contact.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Test Contact")
+
+    def test_update_contact(self):
+        updated_data = {
+            "name": "Updated Contact",
+            "email": "updated@example.com",
+            "phone": "987-654-3210",
+            "address": "Updated Address",
+            "memo": "Updated Memo",
+        }
+        url = reverse("contact-detail", args=[self.contact.pk])
+        response = self.client.put(url, updated_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Updated Contact")
+        self.assertEqual(response.data["email"], "updated@example.com")
+
+    def test_delete_contact(self):
+        url = reverse("contact-detail", args=[self.contact.pk])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Contact.objects.count(), 0)

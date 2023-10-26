@@ -20,4 +20,8 @@ urlpatterns = [
         views.CarrierAddressDetail.as_view(),
         name="carrier-address-detail",
     ),
+    path("banks/", views.BankList.as_view(), name="bank-list"),
+    path("banks/<int:pk>/", views.BankDetail.as_view(), name="bank-detail"),
+    path("contacts/", views.ContactList.as_view(), name="contact-list"),
+    path("contacts/<int:pk>/", views.ContactDetail.as_view(), name="contact-detail"),
 ]

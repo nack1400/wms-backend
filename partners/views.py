@@ -8,6 +8,8 @@ from .serializers import (
     ConsigneeSerializer,
     CarrierSerializer,
     CarrierAddressSerializer,
+    BankSerializer,
+    ContactSerializer,
 )
 
 
@@ -168,4 +170,84 @@ class CarrierAddressDetail(APIView):
     def delete(self, request, pk):
         carrier_address = self.get_object(pk)
         carrier_address.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class BankList(APIView):
+    def get(self, request):
+        banks = Bank.objects.all()
+        serializer = BankSerializer(banks, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = BankSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BankDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Bank.objects.get(pk=pk)
+        except Bank.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, pk):
+        bank = self.get_object(pk)
+        serializer = BankSerializer(bank)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        bank = self.get_object(pk)
+        serializer = BankSerializer(bank, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        bank = self.get_object(pk)
+        bank.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ContactList(APIView):
+    def get(self, request):
+        contacts = Contact.objects.all()
+        serializer = ContactSerializer(contacts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ContactSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ContactDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Contact.objects.get(pk=pk)
+        except Contact.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, pk):
+        contact = self.get_object(pk)
+        serializer = ContactSerializer(contact)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        contact = self.get_object(pk)
+        serializer = ContactSerializer(contact, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        contact = self.get_object(pk)
+        contact.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

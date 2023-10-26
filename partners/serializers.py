@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Customer, Consignee, Carrier, CarrierAddress
+from .models import Customer, Consignee, Carrier, CarrierAddress, Bank, Contact
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -23,4 +23,16 @@ class CarrierSerializer(serializers.ModelSerializer):
 class CarrierAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarrierAddress
+        fields = "__all__"
+
+
+class BankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bank
+        fields = "__all__"
+
+
+class ContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
         fields = "__all__"
