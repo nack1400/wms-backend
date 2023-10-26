@@ -1,8 +1,8 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Customer
-from .serializers import CustomerSerializer
+from .models import Customer, Consignee
+from .serializers import CustomerSerializer, ConsigneeSerializer
 
 
 class CustomerTests(APITestCase):
@@ -61,3 +61,54 @@ class CustomerTests(APITestCase):
         response = self.client.delete(detail_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Customer.objects.count(), 0)
+
+
+class ConsigneeAPITestCase(APITestCase):
+    def setUp(self):
+        self.url = reverse("consignee-list")
+        self.valid_payload = {
+            "name": "Consignee 1",
+            "is_active": True,
+            "memo": "Some memo for consignee",
+        }
+
+    def test_create_consignee(self):
+        response = self.client.post(self.url, self.valid_payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Consignee.objects.count(), 1)
+        self.assertEqual(Consignee.objects.get().name, "Consignee 1")
+
+    def test_list_consignees(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), Consignee.objects.count())
+
+    def test_retrieve_consignee(self):
+        consignee = Consignee.objects.create(name="Consignee 2")
+        response = self.client.get(reverse("consignee-detail", args=[consignee.id]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], consignee.name)
+
+    def test_update_consignee(self):
+        consignee = Consignee.objects.create(name="Consignee 3")
+        updated_data = {
+            "name": "Updated Consignee",
+            "is_active": False,
+            "memo": "Updated memo",
+        }
+        response = self.client.put(
+            reverse("consignee-detail", args=[consignee.id]),
+            updated_data,
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        consignee.refresh_from_db()
+        self.assertEqual(consignee.name, "Updated Consignee")
+        self.assertEqual(consignee.is_active, False)
+        self.assertEqual(consignee.memo, "Updated memo")
+
+    def test_delete_consignee(self):
+        consignee = Consignee.objects.create(name="Consignee 4")
+        response = self.client.delete(reverse("consignee-detail", args=[consignee.id]))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Consignee.objects.count(), 0)
