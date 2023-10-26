@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Customer, Consignee, Carrier, CarrierAddress, Bank, Contact
+from .models import Customer, Consignee, Carrier, DeliveryAddress, Bank, Contact
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -20,10 +20,13 @@ class CarrierSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CarrierAddressSerializer(serializers.ModelSerializer):
+class DeliveryAddressSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CarrierAddress
+        model = DeliveryAddress
         fields = "__all__"
+        extra_kwargs = {
+            "address": {"required": False},
+        }
 
 
 class BankSerializer(serializers.ModelSerializer):

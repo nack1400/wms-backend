@@ -29,14 +29,14 @@ class Carrier(CommonModel):
         return self.name
 
 
-class CarrierAddress(CommonModel):
-    carrier = models.ForeignKey(Carrier, on_delete=models.CASCADE)
+class DeliveryAddress(CommonModel):
+    name = models.CharField(max_length=100)
     address = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     memo = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.carrier.name} - {self.address}"
+        return self.address
 
 
 class Contact(CommonModel):
