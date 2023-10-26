@@ -43,6 +43,7 @@ CUSTOM_APPS = [
     "users.apps.UsersConfig",
     "partners.apps.PartnersConfig",
     "common.apps.CommonConfig",
+    "categories.apps.CategoriesConfig",
 ]
 
 THIRD_PARTY_APPS = [

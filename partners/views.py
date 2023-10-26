@@ -192,7 +192,7 @@ class BankDetail(APIView):
         try:
             return Bank.objects.get(pk=pk)
         except Bank.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            raise NotFound
 
     def get(self, request, pk):
         bank = self.get_object(pk)
@@ -232,7 +232,7 @@ class ContactDetail(APIView):
         try:
             return Contact.objects.get(pk=pk)
         except Contact.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            raise NotFound
 
     def get(self, request, pk):
         contact = self.get_object(pk)
