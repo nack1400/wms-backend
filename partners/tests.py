@@ -1,8 +1,7 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Customer, Consignee
-from .serializers import CustomerSerializer, ConsigneeSerializer
+from .models import Customer, Consignee, Carrier, CarrierAddress
 
 
 class CustomerTests(APITestCase):
@@ -112,3 +111,112 @@ class ConsigneeAPITestCase(APITestCase):
         response = self.client.delete(reverse("consignee-detail", args=[consignee.id]))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Consignee.objects.count(), 0)
+
+
+class CarrierTests(APITestCase):
+    def setUp(self):
+        self.carrier_data = {
+            "name": "Test Carrier",
+            "is_active": True,
+            "memo": "Test Memo",
+        }
+        self.url = reverse("carrier-list")
+
+    def test_create_carrier(self):
+        response = self.client.post(self.url, self.carrier_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Carrier.objects.count(), 1)
+        self.assertEqual(Carrier.objects.get().name, "Test Carrier")
+
+    def test_list_carriers(self):
+        Carrier.objects.create(**self.carrier_data)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_retrieve_carrier(self):
+        carrier = Carrier.objects.create(**self.carrier_data)
+        url = reverse("carrier-detail", args=[carrier.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Test Carrier")
+
+    def test_update_carrier(self):
+        carrier = Carrier.objects.create(**self.carrier_data)
+        url = reverse("carrier-detail", args=[carrier.pk])
+        updated_data = {"name": "Updated Carrier", "memo": "Updated Memo"}
+        response = self.client.put(url, updated_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Updated Carrier")
+        self.assertEqual(response.data["memo"], "Updated Memo")
+
+    def test_delete_carrier(self):
+        carrier = Carrier.objects.create(**self.carrier_data)
+        url = reverse("carrier-detail", args=[carrier.pk])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Carrier.objects.count(), 0)
+
+
+class CarrierAddressTests(APITestCase):
+    def setUp(self):
+        self.carrier_data = {
+            "name": "Test Carrier",
+            "is_active": True,
+            "memo": "Test Memo",
+        }
+        self.carrier = Carrier.objects.create(**self.carrier_data)
+
+        self.carrier_address_data = {
+            "carrier": self.carrier,
+            "address": "Test Address",
+            "is_active": True,
+            "memo": "Test Memo",
+        }
+
+        self.url = reverse("carrier-address-list")
+
+    def test_create_carrier_address(self):
+        carrier_address_data = {
+            "carrier": self.carrier.pk,
+            "address": "Test Address",
+            "is_active": True,
+            "memo": "Test Memo",
+        }
+        response = self.client.post(self.url, carrier_address_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(CarrierAddress.objects.count(), 1)
+        self.assertEqual(CarrierAddress.objects.get().address, "Test Address")
+
+    def test_list_carrier_addresses(self):
+        CarrierAddress.objects.create(**self.carrier_address_data)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_retrieve_carrier_address(self):
+        carrier_address = CarrierAddress.objects.create(**self.carrier_address_data)
+        url = reverse("carrier-address-detail", args=[carrier_address.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["address"], "Test Address")
+
+    def test_update_carrier_address(self):
+        carrier_address = CarrierAddress.objects.create(**self.carrier_address_data)
+        url = reverse("carrier-address-detail", args=[carrier_address.pk])
+        updated_data = {
+            "carrier": self.carrier.pk,
+            "address": "Updated Address",
+            "memo": "Updated Memo",
+        }
+        response = self.client.put(url, updated_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["address"], "Updated Address")
+        self.assertEqual(response.data["memo"], "Updated Memo")
+
+    def test_delete_carrier_address(self):
+        carrier_address = CarrierAddress.objects.create(**self.carrier_address_data)
+        url = reverse("carrier-address-detail", args=[carrier_address.pk])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(CarrierAddress.objects.count(), 0)
