@@ -39,7 +39,11 @@ SYSTEM_APPS = [
     "django.contrib.staticfiles",
 ]
 
-CUSTOM_APPS = ["users.apps.UsersConfig"]
+CUSTOM_APPS = [
+    "users.apps.UsersConfig",
+    "partners.apps.PartnersConfig",
+    "common.apps.CommonConfig",
+]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -145,5 +149,5 @@ AUTH_USER_MODEL = "users.User"
 # Swagger
 
 SWAGGER_SETTINGS = {
-    'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg.inspectors.SwaggerAutoSchema',
+    "DEFAULT_AUTO_SCHEMA_CLASS": "drf_yasg.inspectors.SwaggerAutoSchema",
 }

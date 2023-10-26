@@ -5,8 +5,16 @@ from django.contrib.auth import get_user_model
 class CommonModel(models.Model):
     """Common Model Definition"""
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True,
+        blank=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        null=True,
+        blank=True,
+    )
     created_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.SET_NULL,
