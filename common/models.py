@@ -32,3 +32,21 @@ class CommonModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class CommonTimeModel(models.Model):
+    """Common Model Definition"""
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True,
+        blank=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        abstract = True

@@ -45,6 +45,8 @@ CUSTOM_APPS = [
     "common.apps.CommonConfig",
     "categories.apps.CategoriesConfig",
     "products.apps.ProductsConfig",
+    "handling_units.apps.HandlingUnitsConfig",
+    "settings.apps.SettingsConfig",
 ]
 
 THIRD_PARTY_APPS = [
