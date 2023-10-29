@@ -35,7 +35,7 @@ class CommonModel(models.Model):
 
 
 class CommonTimeModel(models.Model):
-    """Common Model Definition"""
+    """Common Time Model Definition"""
 
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -48,5 +48,23 @@ class CommonTimeModel(models.Model):
         blank=True,
     )
 
+    class Meta:
+        abstract = True
+
+class CommonCreatedOnlyModel(models.Model):
+    """Common Created Model Definition"""
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True,
+        blank=True,
+    )
+    created_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="%(app_label)s_%(class)s_created",
+    )
     class Meta:
         abstract = True

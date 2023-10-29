@@ -2,6 +2,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from common.models import CommonModel
+from partners.models import Customer
 
 
 class Product(CommonModel):
@@ -13,6 +14,11 @@ class Product(CommonModel):
     memo = models.TextField(null=True, blank=True)
     category = models.ForeignKey(
         "categories.Category",
+        related_name="products",
+        on_delete=models.PROTECT,
+    )
+    customer = models.ForeignKey(
+        Customer,
         related_name="products",
         on_delete=models.PROTECT,
     )
