@@ -1,10 +1,11 @@
 from django.db import models
 from common.models import CommonTimeModel
+from simple_history.models import HistoricalRecords
 
 
 class Pallet(CommonTimeModel):
-    name = models.CharField(max_length=255)
-    number = models.PositiveIntegerField(unique=True)
+    name = models.CharField(max_length=25)
+    history = HistoricalRecords()
 
 
 class PackagingUnit(CommonTimeModel):
@@ -14,7 +15,7 @@ class PackagingUnit(CommonTimeModel):
         ("each", "Each"),
     )
 
-    name = models.CharField(max_length=255)
-    number = models.PositiveIntegerField(default=1)
+    name = models.CharField(max_length=25)
     unit_type = models.CharField(max_length=50, choices=UNIT_CHOICES)
     pallet = models.ForeignKey(Pallet, on_delete=models.CASCADE)
+    history = HistoricalRecords()

@@ -21,6 +21,7 @@ class Product(CommonModel):
         Customer,
         related_name="products",
         on_delete=models.PROTECT,
+        null=True,
     )
 
     def save(self, *args, **kwargs):

@@ -48,11 +48,14 @@ CUSTOM_APPS = [
     "handling_units.apps.HandlingUnitsConfig",
     "settings.apps.SettingsConfig",
     "operations.apps.OperationsConfig",
+    "inventories.apps.InventoriesConfig",
+    "warehouses.apps.WarehousesConfig",
 ]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
     "drf_yasg",
+    "simple_history",
 ]
 
 INSTALLED_APPS = SYSTEM_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
