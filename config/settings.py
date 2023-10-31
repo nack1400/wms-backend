@@ -54,6 +54,7 @@ CUSTOM_APPS = [
     "operations.apps.OperationsConfig",
     "inventories.apps.InventoriesConfig",
     "warehouses.apps.WarehousesConfig",
+    "billings.apps.BillingsConfig",
 ]
 
 THIRD_PARTY_APPS = [
