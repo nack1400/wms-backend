@@ -13,6 +13,7 @@ djangorestframework = "^3.14.0"
 psycopg2-binary = "^2.9.9"
 drf-yasg = "^1.21.7"
 django-simple-history = "^3.4.0"
+django-environ = "^0.11.2"
 
 
 [build-system]
