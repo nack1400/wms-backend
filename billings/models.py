@@ -25,7 +25,7 @@ class StorageBilling(models.Model):
         ("dry", "Dry"),
     ]
 
-    code = models.CharField(max_length=20)
+    code = models.CharField(max_length=20, unique=True)
     billing_type = models.CharField(max_length=10, choices=BILLING_TYPES)
     rate = models.DecimalField(max_digits=10, decimal_places=2)
     min_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -48,10 +48,11 @@ class TaskBilling(models.Model):
     BILLING_UNITS = [
         ("pallet", "Pallet"),
         ("box", "Box"),
+        ("weight", "Weight"),
         ("manual", "Manual"),
     ]
 
-    code = models.CharField(max_length=20)
+    code = models.CharField(max_length=20, unique=True)
     billing_unit = models.CharField(max_length=10, choices=BILLING_UNITS)
     billing_type = models.CharField(max_length=10, choices=BILLING_TYPES)
     rate = models.DecimalField(max_digits=10, decimal_places=2)

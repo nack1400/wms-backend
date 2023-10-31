@@ -28,4 +28,4 @@ class Transfer(CommonModel):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f"Outbound {self.id}"
+        return f"Transfer {self.id}"

@@ -5,13 +5,19 @@ from django.dispatch import receiver
 
 
 class Category(CommonModel):
+    BILLING_UNITS = [
+        ("pallet", "Pallet"),
+        ("box", "Box"),
+        ("weight", "Weight"),
+        ("manual", "Manual"),
+    ]
     name = models.CharField(max_length=100)
     parent = models.ForeignKey(
         "self", related_name="children", null=True, blank=True, on_delete=models.CASCADE
     )
     key = models.CharField(max_length=100, unique=True, null=False, blank=False)
     sequence_number = models.IntegerField(default=1)
-    billing_unit = models.CharField(max_length=50)
+    billing_unit = models.CharField(max_length=10, choices=BILLING_UNITS)
     level = models.PositiveIntegerField(default=0, editable=False)
 
     class Meta:

@@ -7,6 +7,7 @@ from simple_history.admin import SimpleHistoryAdmin
 # class InboundAdmin(SimpleHistoryAdmin):
 #     list_display = ("quantity", "received_date")
 
+
 admin.site.register(Inbound, SimpleHistoryAdmin)
 admin.site.register(Outbound, SimpleHistoryAdmin)
 admin.site.register(Transfer, SimpleHistoryAdmin)
