@@ -6,7 +6,9 @@ from simple_history.models import HistoricalRecords
 
 class Pallet(CommonTimeModel):
     name = models.CharField(max_length=25)
-    bin_location = models.ForeignKey(BinLocation, on_delete=models.PROTECT)
+    bin_location = models.ForeignKey(
+        BinLocation, on_delete=models.PROTECT, null=True, blank=True
+    )
     history = HistoricalRecords()
 
 
