@@ -22,14 +22,22 @@ class CategoryTests(APITestCase):
         self.assertEqual(len(response.data), 2)
 
     def test_create_category(self):
-        data = {
+        data1 = {
             "name": "Category 3",
-            "billing_unit": "Unit 3",
+            "billing_unit": "pallet",
             "key": "cat3",
             "parent": None,
         }
-        response = self.client.post(self.url_list, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data2 = {
+            "name": "Category 3",
+            "billing_unit": "test others",
+            "key": "cat3",
+            "parent": None,
+        }
+        response1 = self.client.post(self.url_list, data1, format="json")
+        response2 = self.client.post(self.url_list, data2, format="json")
+        self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Category.objects.count(), 3)
         created_category = Category.objects.get(name="Category 3")
         self.assertEqual(created_category.key, "cat3")
@@ -37,7 +45,7 @@ class CategoryTests(APITestCase):
     def test_create_child_categories(self):
         data1 = {
             "name": "Child Category 1",
-            "billing_unit": "Unit 1",
+            "billing_unit": "pallet",
             "parent": self.category1.id,
             "key": "child_cat1",
         }
@@ -49,7 +57,7 @@ class CategoryTests(APITestCase):
 
         data2 = {
             "name": "Child Category 2",
-            "billing_unit": "Unit 2",
+            "billing_unit": "box",
             "parent": self.category1.id,
             "key": "child_cat2",
         }
@@ -62,7 +70,7 @@ class CategoryTests(APITestCase):
     def test_create_category_without_key(self):
         data = {
             "name": "Category Without Key",
-            "billing_unit": "Unit",
+            "billing_unit": "box",
             "parent": None,
         }
         response = self.client.post(self.url_list, data, format="json")
@@ -73,7 +81,7 @@ class CategoryTests(APITestCase):
     def test_create_duplicate_key_category(self):
         data1 = {
             "name": "Duplicate Category",
-            "billing_unit": "Unit",
+            "billing_unit": "pallet",
             "key": "duplicate_cat",
             "parent": None,
         }
@@ -83,7 +91,7 @@ class CategoryTests(APITestCase):
 
         data2 = {
             "name": "Another Duplicate Category",
-            "billing_unit": "Unit",
+            "billing_unit": "pallet",
             "key": "duplicate_cat",
             "parent": None,
         }
@@ -102,11 +110,14 @@ class CategoryTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_category(self):
-        data = {"name": "Updated Category", "billing_unit": "Updated Unit"}
+        data = {"name": "Updated Category", "billing_unit": "weight"}
         response = self.client.put(self.url_detail1, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
             Category.objects.get(pk=self.category1.id).name, "Updated Category"
+        )
+        self.assertEqual(
+            Category.objects.get(pk=self.category1.id).billing_unit, "weight"
         )
 
     def test_delete_category(self):
