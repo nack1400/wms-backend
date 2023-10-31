@@ -192,6 +192,7 @@ class DeliveryAddressTests(APITestCase):
         updated_data = {
             "name": "Updated Delivery Address",
             "is_active": False,
+            "address": "1234444 Main St",
             "memo": "Updated memo for delivery address",
         }
         response = self.client.put(

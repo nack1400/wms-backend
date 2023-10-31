@@ -3,16 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 from .models import Customer, Consignee, Carrier, DeliveryAddress, Contact, Bank
-from .serializers import (
-    CustomerSerializer,
-    ConsigneeSerializer,
-    CarrierSerializer,
-    DeliveryAddressSerializer,
-    BankSerializer,
-    ContactSerializer,
-)
+from .serializers import *
+from .swagger import *
 
 
+@customer_list_swagger
 class CustomerList(APIView):
     def get(self, request):
         customers = Customer.objects.all()
@@ -27,6 +22,7 @@ class CustomerList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@customer_detail_swagger
 class CustomerDetail(APIView):
     def get_object(self, pk):
         try:
@@ -53,6 +49,7 @@ class CustomerDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@consignee_list_swagger
 class ConsigneeList(APIView):
     def get(self, request):
         consignees = Consignee.objects.all()
@@ -67,6 +64,7 @@ class ConsigneeList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@consignee_detail_swagger
 class ConsigneeDetail(APIView):
     def get_object(self, pk):
         try:
@@ -93,6 +91,7 @@ class ConsigneeDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@carrier_list_swagger
 class CarrierList(APIView):
     def get(self, request):
         carriers = Carrier.objects.all()
@@ -107,6 +106,7 @@ class CarrierList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@carrier_detail_swagger
 class CarrierDetail(APIView):
     def get_object(self, pk):
         try:
@@ -133,6 +133,7 @@ class CarrierDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@delivery_address_list_swagger
 class DeliveryAddressList(APIView):
     def get(self, request):
         delivery_addresses = DeliveryAddress.objects.all()
@@ -147,6 +148,7 @@ class DeliveryAddressList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@delivery_address_detail_swagger
 class DeliveryAddressDetail(APIView):
     def get_object(self, pk):
         try:
@@ -173,6 +175,7 @@ class DeliveryAddressDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@bank_list_swagger
 class BankList(APIView):
     def get(self, request):
         banks = Bank.objects.all()
@@ -187,6 +190,7 @@ class BankList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@bank_detail_swagger
 class BankDetail(APIView):
     def get_object(self, pk):
         try:
@@ -213,6 +217,7 @@ class BankDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@contact_list_swagger
 class ContactList(APIView):
     def get(self, request):
         contacts = Contact.objects.all()
@@ -227,6 +232,7 @@ class ContactList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@contact_detail_swagger
 class ContactDetail(APIView):
     def get_object(self, pk):
         try:

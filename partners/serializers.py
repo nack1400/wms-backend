@@ -24,9 +24,6 @@ class DeliveryAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeliveryAddress
         fields = "__all__"
-        extra_kwargs = {
-            "address": {"required": False},
-        }
 
 
 class BankSerializer(serializers.ModelSerializer):

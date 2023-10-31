@@ -9,6 +9,7 @@ class CommonModel(models.Model):
         auto_now_add=True,
         null=True,
         blank=True,
+        editable=False,
     )
     updated_at = models.DateTimeField(
         auto_now=True,
@@ -21,6 +22,7 @@ class CommonModel(models.Model):
         null=True,
         blank=True,
         related_name="%(app_label)s_%(class)s_created",
+        editable=False,
     )
     updated_by = models.ForeignKey(
         get_user_model(),
@@ -41,6 +43,7 @@ class CommonTimeModel(models.Model):
         auto_now_add=True,
         null=True,
         blank=True,
+        editable=False,
     )
     updated_at = models.DateTimeField(
         auto_now=True,
@@ -51,6 +54,7 @@ class CommonTimeModel(models.Model):
     class Meta:
         abstract = True
 
+
 class CommonCreatedOnlyModel(models.Model):
     """Common Created Model Definition"""
 
@@ -58,6 +62,7 @@ class CommonCreatedOnlyModel(models.Model):
         auto_now_add=True,
         null=True,
         blank=True,
+        editable=False,
     )
     created_by = models.ForeignKey(
         get_user_model(),
@@ -66,5 +71,6 @@ class CommonCreatedOnlyModel(models.Model):
         blank=True,
         related_name="%(app_label)s_%(class)s_created",
     )
+
     class Meta:
         abstract = True
