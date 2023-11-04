@@ -6,9 +6,20 @@ class Customer(CommonModel):
     name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
     memo = models.TextField(blank=True, null=True)
+    ein = models.CharField(max_length=25)
 
     def __str__(self):
         return self.name
+
+
+class CustomerAttachment(models.Model):
+    customer = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, related_name="attachments"
+    )
+    url = models.URLField()
+
+    def __str__(self):
+        return f"Attachment for {self.customer.name}"
 
 
 class Consignee(CommonModel):
@@ -20,6 +31,16 @@ class Consignee(CommonModel):
         return self.name
 
 
+class ConsigneeAttachment(models.Model):
+    consignee = models.ForeignKey(
+        Consignee, on_delete=models.CASCADE, related_name="attachments"
+    )
+    url = models.URLField()
+
+    def __str__(self):
+        return f"Attachment for {self.consignee.name}"
+
+
 class Carrier(CommonModel):
     name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
@@ -27,6 +48,16 @@ class Carrier(CommonModel):
 
     def __str__(self):
         return self.name
+
+
+class CarrierAttachment(models.Model):
+    carrier = models.ForeignKey(
+        Carrier, on_delete=models.CASCADE, related_name="attachments"
+    )
+    url = models.URLField()
+
+    def __str__(self):
+        return f"Attachment for {self.carrier.name}"
 
 
 class DeliveryAddress(CommonModel):
