@@ -1,14 +1,7 @@
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from .serializers import (
-    CustomerSerializer,
-    ConsigneeSerializer,
-    CarrierSerializer,
-    DeliveryAddressSerializer,
-    BankSerializer,
-    ContactSerializer,
-)
+from .serializers import *
 
 
 def customer_list_swagger(view_class):
@@ -16,7 +9,7 @@ def customer_list_swagger(view_class):
         @swagger_auto_schema(
             operation_summary="List all customers",
             operation_description="Retrieve a list of all customers.",
-            responses={200: CustomerSerializer(many=True)},
+            responses={200: CustomerWithAttachmentsSerializer(many=True)},
         )
         def get(self, request, *args, **kwargs):
             return super().get(request, *args, **kwargs)
@@ -63,12 +56,39 @@ def customer_detail_swagger(view_class):
     return DecoratedView
 
 
+def customer_attachment_create_swagger(view_class):
+    class DecoratedView(view_class):
+        @swagger_auto_schema(
+            operation_summary="Create a new attachment for a customer",
+            operation_description="Create a new attachment for a customer with the provided data.",
+            request_body=CustomerAttachmentSerializer,
+            responses={201: CustomerAttachmentSerializer()},
+        )
+        def post(self, request, customer_pk, *args, **kwargs):
+            return super().post(request, customer_pk, *args, **kwargs)
+
+    return DecoratedView
+
+
+def customer_attachment_delete_swagger(view_class):
+    class DecoratedView(view_class):
+        @swagger_auto_schema(
+            operation_summary="Delete a customer attachment",
+            operation_description="Delete a customer attachment by ID.",
+            responses={204: "No Content"},
+        )
+        def delete(self, request, customer_pk, attachment_pk, *args, **kwargs):
+            return super().delete(request, customer_pk, attachment_pk, *args, **kwargs)
+
+    return DecoratedView
+
+
 def consignee_list_swagger(view_class):
     class DecoratedView(view_class):
         @swagger_auto_schema(
             operation_summary="List all consignees",
             operation_description="Retrieve a list of all consignees.",
-            responses={200: ConsigneeSerializer(many=True)},
+            responses={200: ConsigneeWithAttachmentsSerializer(many=True)},
         )
         def get(self, request, *args, **kwargs):
             return super().get(request, *args, **kwargs)
@@ -88,28 +108,56 @@ def consignee_list_swagger(view_class):
 def consignee_detail_swagger(view_class):
     class DecoratedView(view_class):
         @swagger_auto_schema(
-            operation_summary="Retrieve a consignee details",
-            operation_description="Retrieve details of a specific consignee.",
+            operation_summary="Retrieve a consignee",
+            operation_description="Retrieve details of a consignee by ID.",
             responses={200: ConsigneeSerializer()},
         )
-        def get(self, request, *args, **kwargs):
-            return super().get(request, *args, **kwargs)
+        def get(self, request, pk, *args, **kwargs):
+            return super().get(request, pk, *args, **kwargs)
 
         @swagger_auto_schema(
             operation_summary="Update a consignee",
-            operation_description="Update an existing consignee with the provided data.",
+            operation_description="Update a consignee with the provided data.",
             request_body=ConsigneeSerializer,
             responses={200: ConsigneeSerializer()},
         )
-        def put(self, request, *args, **kwargs):
-            return super().put(request, *args, **kwargs)
+        def put(self, request, pk, *args, **kwargs):
+            return super().put(request, pk, *args, **kwargs)
 
         @swagger_auto_schema(
             operation_summary="Delete a consignee",
-            operation_description="Delete a specific consignee.",
+            operation_description="Delete a consignee by ID.",
+            responses={204: "No Content"},
         )
-        def delete(self, request, *args, **kwargs):
-            return super().delete(request, *args, **kwargs)
+        def delete(self, request, pk, *args, **kwargs):
+            return super().delete(request, pk, *args, **kwargs)
+
+    return DecoratedView
+
+
+def consignee_attachment_create_swagger(view_class):
+    class DecoratedView(view_class):
+        @swagger_auto_schema(
+            operation_summary="Create a new attachment for a consignee",
+            operation_description="Create a new attachment for a consignee with the provided data.",
+            request_body=ConsigneeAttachmentSerializer,
+            responses={201: ConsigneeAttachmentSerializer()},
+        )
+        def post(self, request, consignee_pk, *args, **kwargs):
+            return super().post(request, consignee_pk, *args, **kwargs)
+
+    return DecoratedView
+
+
+def consignee_attachment_delete_swagger(view_class):
+    class DecoratedView(view_class):
+        @swagger_auto_schema(
+            operation_summary="Delete a consignee attachment",
+            operation_description="Delete a consignee attachment by ID.",
+            responses={204: "No Content"},
+        )
+        def delete(self, request, consignee_pk, attachment_pk, *args, **kwargs):
+            return super().delete(request, consignee_pk, attachment_pk, *args, **kwargs)
 
     return DecoratedView
 

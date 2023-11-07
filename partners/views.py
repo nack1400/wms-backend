@@ -2,16 +2,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import NotFound
-from .models import Customer, Consignee, Carrier, DeliveryAddress, Contact, Bank
+from .models import *
 from .serializers import *
 from .swagger import *
 
 
+# Customer
 @customer_list_swagger
 class CustomerList(APIView):
     def get(self, request):
         customers = Customer.objects.all()
-        serializer = CustomerSerializer(customers, many=True)
+        serializer = CustomerWithAttachmentsSerializer(customers, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -49,11 +50,47 @@ class CustomerDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@customer_attachment_create_swagger
+class CustomerAttachmentCreate(APIView):
+    def post(self, request, customer_pk):
+        try:
+            customer = Customer.objects.get(pk=customer_pk)
+        except Customer.DoesNotExist:
+            raise NotFound("Customer not found")
+
+        serializer = CustomerAttachmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.validated_data["customer"] = customer
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@customer_attachment_delete_swagger
+class CustomerAttachmentDelete(APIView):
+    def delete(self, request, customer_pk, attachment_pk):
+        try:
+            customer = Customer.objects.get(pk=customer_pk)
+        except Customer.DoesNotExist:
+            raise NotFound("Customer not found")
+
+        try:
+            attachment = CustomerAttachment.objects.get(
+                pk=attachment_pk, customer=customer
+            )
+        except CustomerAttachment.DoesNotExist:
+            raise NotFound("Attachment not found")
+
+        attachment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# Consignee
 @consignee_list_swagger
 class ConsigneeList(APIView):
     def get(self, request):
         consignees = Consignee.objects.all()
-        serializer = ConsigneeSerializer(consignees, many=True)
+        serializer = ConsigneeWithAttachmentsSerializer(consignees, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -74,7 +111,7 @@ class ConsigneeDetail(APIView):
 
     def get(self, request, pk):
         consignee = self.get_object(pk)
-        serializer = ConsigneeSerializer(consignee)
+        serializer = ConsigneeWithAttachmentsSerializer(consignee)
         return Response(serializer.data)
 
     def put(self, request, pk):
@@ -91,6 +128,42 @@ class ConsigneeDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@consignee_attachment_create_swagger
+class ConsigneeAttachmentCreate(APIView):
+    def post(self, request, consignee_pk):
+        try:
+            consignee = Consignee.objects.get(pk=consignee_pk)
+        except Consignee.DoesNotExist:
+            raise NotFound("Consignee not found")
+
+        serializer = ConsigneeAttachmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.validated_data["consignee"] = consignee
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@consignee_attachment_delete_swagger
+class ConsigneeAttachmentDelete(APIView):
+    def delete(self, request, consignee_pk, attachment_pk):
+        try:
+            consignee = Consignee.objects.get(pk=consignee_pk)
+        except Consignee.DoesNotExist:
+            raise NotFound("Consignee not found")
+
+        try:
+            attachment = ConsigneeAttachment.objects.get(
+                pk=attachment_pk, consignee=consignee
+            )
+        except ConsigneeAttachment.DoesNotExist:
+            raise NotFound("Attachment not found")
+
+        attachment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# Carrier
 @carrier_list_swagger
 class CarrierList(APIView):
     def get(self, request):
@@ -133,6 +206,7 @@ class CarrierDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# Delivery
 @delivery_address_list_swagger
 class DeliveryAddressList(APIView):
     def get(self, request):
@@ -175,6 +249,7 @@ class DeliveryAddressDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# Bank
 @bank_list_swagger
 class BankList(APIView):
     def get(self, request):
@@ -217,6 +292,7 @@ class BankDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# Contact
 @contact_list_swagger
 class ContactList(APIView):
     def get(self, request):

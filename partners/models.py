@@ -6,7 +6,7 @@ class Customer(CommonModel):
     name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
     memo = models.TextField(blank=True, null=True)
-    ein = models.CharField(max_length=25)
+    ein = models.CharField(max_length=25, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -129,4 +129,3 @@ class Bank(CommonModel):
 
     def __str__(self):
         return self.name
-
