@@ -31,6 +31,16 @@ urlpatterns = [
     path("carriers", views.CarrierList.as_view(), name="carrier-list"),
     path("carriers/<int:pk>", views.CarrierDetail.as_view(), name="carrier-detail"),
     path(
+        "carriers/<int:carrier_pk>/attachments",
+        views.CarrierAttachmentCreate.as_view(),
+        name="carrier-attachment-create",
+    ),
+    path(
+        "carriers/<int:carrier_pk>/attachments/<int:attachment_pk>",
+        views.CarrierAttachmentDelete.as_view(),
+        name="carrier-attachment-delete",
+    ),
+    path(
         "delivery-addresses",
         views.DeliveryAddressList.as_view(),
         name="delivery-address-list",

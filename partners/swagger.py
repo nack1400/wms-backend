@@ -3,6 +3,8 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .serializers import *
 
+# Customer
+
 
 def customer_list_swagger(view_class):
     class DecoratedView(view_class):
@@ -81,6 +83,9 @@ def customer_attachment_delete_swagger(view_class):
             return super().delete(request, customer_pk, attachment_pk, *args, **kwargs)
 
     return DecoratedView
+
+
+# Consignee
 
 
 def consignee_list_swagger(view_class):
@@ -162,6 +167,9 @@ def consignee_attachment_delete_swagger(view_class):
     return DecoratedView
 
 
+# Carrier
+
+
 def carrier_list_swagger(view_class):
     class DecoratedView(view_class):
         @swagger_auto_schema(
@@ -211,6 +219,36 @@ def carrier_detail_swagger(view_class):
             return super().delete(request, *args, **kwargs)
 
     return DecoratedView
+
+
+def carrier_attachment_create_swagger(view_class):
+    class DecoratedView(view_class):
+        @swagger_auto_schema(
+            operation_summary="Create a new attachment for a carrier",
+            operation_description="Create a new attachment for a carrier with the provided data.",
+            request_body=CarrierAttachmentSerializer,
+            responses={201: CarrierAttachmentSerializer()},
+        )
+        def post(self, request, carrier_pk, *args, **kwargs):
+            return super().post(request, carrier_pk, *args, **kwargs)
+
+    return DecoratedView
+
+
+def carrier_attachment_delete_swagger(view_class):
+    class DecoratedView(view_class):
+        @swagger_auto_schema(
+            operation_summary="Delete a carrier attachment",
+            operation_description="Delete a carrier attachment by ID.",
+            responses={204: "No Content"},
+        )
+        def delete(self, request, carrier_pk, attachment_pk, *args, **kwargs):
+            return super().delete(request, carrier_pk, attachment_pk, *args, **kwargs)
+
+    return DecoratedView
+
+
+# Delivery Address
 
 
 def delivery_address_list_swagger(view_class):
@@ -264,6 +302,9 @@ def delivery_address_detail_swagger(view_class):
     return DecoratedView
 
 
+# Bank
+
+
 def bank_list_swagger(view_class):
     class DecoratedView(view_class):
         @swagger_auto_schema(
@@ -313,6 +354,9 @@ def bank_detail_swagger(view_class):
             return super().delete(request, *args, **kwargs)
 
     return DecoratedView
+
+
+# Contact
 
 
 def contact_list_swagger(view_class):

@@ -168,7 +168,7 @@ class ConsigneeAttachmentDelete(APIView):
 class CarrierList(APIView):
     def get(self, request):
         carriers = Carrier.objects.all()
-        serializer = CarrierSerializer(carriers, many=True)
+        serializer = CarrierWithAttachmentsSerializer(carriers, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -177,7 +177,6 @@ class CarrierList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @carrier_detail_swagger
 class CarrierDetail(APIView):
@@ -189,7 +188,7 @@ class CarrierDetail(APIView):
 
     def get(self, request, pk):
         carrier = self.get_object(pk)
-        serializer = CarrierSerializer(carrier)
+        serializer = CarrierWithAttachmentsSerializer(carrier)
         return Response(serializer.data)
 
     def put(self, request, pk):
@@ -204,7 +203,39 @@ class CarrierDetail(APIView):
         carrier = self.get_object(pk)
         carrier.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@carrier_attachment_create_swagger
+class CarrierAttachmentCreate(APIView):
+    def post(self, request, carrier_pk):
+        try:
+            carrier = Carrier.objects.get(pk=carrier_pk)
+        except Carrier.DoesNotExist:
+            raise NotFound("Carrier not found")
 
+        serializer = CarrierAttachmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.validated_data["carrier"] = carrier
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@carrier_attachment_delete_swagger
+class CarrierAttachmentDelete(APIView):
+    def delete(self, request, carrier_pk, attachment_pk):
+        try:
+            carrier = Carrier.objects.get(pk=carrier_pk)
+        except Carrier.DoesNotExist:
+            raise NotFound("Carrier not found")
+
+        try:
+            attachment = CarrierAttachment.objects.get(
+                pk=attachment_pk, carrier=carrier
+            )
+        except CarrierAttachment.DoesNotExist:
+            raise NotFound("Attachment not found")
+
+        attachment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Delivery
 @delivery_address_list_swagger
